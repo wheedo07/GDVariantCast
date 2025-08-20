@@ -12,21 +12,27 @@ func _ready():
 		if(args[i] == "--type" && i+1 < args.size()):
 			type = args[i+1];
 	print("측정 시작!");
-	var avg_us:int;
+	var avg_us:Array;
 	if(type == "cpp"):
 		var varint = VariantBench.new();
-		avg_us = varint.run(iters);
+		avg_us = varint.run_cpp(iters);
 	elif(type == "gd"):
 		avg_us = run_gd(iters);
 	else:
 		printerr("올바른 타입을 선택하세요 (cpp, gd)");
 		return;
-	main.saveData(type, "%d,%d" % [iters, avg_us]);
+	main.saveData(type, "%d,%d,%d" % [iters, avg_us[0], avg_us[1]]);
 	print("측정 완료");
 	get_tree().quit();
 
-func run_gd(iters: int) -> int:
-	var a = 1;
+@onready var a = 1;
+func forBench(iters: int) -> int:
+	var start := Time.get_ticks_usec()
+	for i in iters:
+		a = 1;
+	return Time.get_ticks_usec() - start
+	
+func varBench(iters: int) -> int:
 	var start := Time.get_ticks_usec()
 	for i in iters:
 		match typeof(a):
@@ -39,3 +45,6 @@ func run_gd(iters: int) -> int:
 			TYPE_PACKED_STRING_ARRAY: a = 1
 			_:                        a = 1
 	return Time.get_ticks_usec() - start
+
+func run_gd(iters: int) -> Array:
+	return [forBench(iters), varBench(iters)];

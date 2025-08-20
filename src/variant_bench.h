@@ -12,7 +12,9 @@ namespace godot {
             Variant a = 1;
 
         public:
-            int64_t run(int iters);
+            Array run_cpp(int iters);
+            int64_t varBench(int iters);
+            int64_t forBench(int iters);
     };
 }
 

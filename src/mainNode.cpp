@@ -12,7 +12,7 @@ MainNode::MainNode() {
     path_gd  = user_dir.path_join("variantCast_gd.csv");
     path_cpp = user_dir.path_join("variantCast_cpp.csv");
 
-    String content = "iters,avg_us";
+    String content = "iters,us_no_cast,us_cast_assign";
     if(!fs::exists(path_gd.utf8().get_data())) save(path_gd, content);
     if(!fs::exists(path_cpp.utf8().get_data())) save(path_cpp, content);
 }

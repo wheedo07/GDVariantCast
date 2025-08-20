@@ -3,10 +3,20 @@
 using namespace godot;
 
 void VariantBench::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("run", "iters"), &VariantBench::run);
+    ClassDB::bind_method(D_METHOD("run_cpp", "iters"), &VariantBench::run_cpp);
 }
 
-int64_t VariantBench::run(int iters) {
+Array VariantBench::run_cpp(int iters) {
+    return Array::make(forBench(iters), varBench(iters));
+}
+
+int64_t VariantBench::forBench(int iters) {
+    uint64_t start = Time::get_singleton()->get_ticks_usec();
+    for(int i = 0; i < iters; i++) a = 1;
+    return int64_t((Time::get_singleton()->get_ticks_usec() - start));
+}
+
+int64_t VariantBench::varBench(int iters) {
     uint64_t start = Time::get_singleton()->get_ticks_usec();
     for(int i = 0; i < iters; i++) {
         switch(a.get_type()) {
